@@ -8,11 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: "c2cc433e-97d2-4fa7-b9eb-12a98511c9ab", name: "Misha Krasnonos", number: "000-00-11-11" },
-      { id: "f98d00d6-01b7-481a-8b52-c607c5127348", name: "Sasha Krasnonos", number: "111-11-00-00" },
-      { id: "f98d00d6-01b7-481a-8b52-c607c7887 348", name: "Lena Krasnonos", number: "111-11-22-22" },
-    ],
+    contacts: [],
     filter: "",
   };
 
@@ -33,7 +29,17 @@ class App extends Component {
       filter: e.target.value,
     });
   };
-
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem("contacts"));
+    if (contacts) {
+      this.setState({ contacts: contacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
   render() {
     const { contacts, filter } = this.state;
     const lowerFilter = this.state.filter.toLowerCase();
