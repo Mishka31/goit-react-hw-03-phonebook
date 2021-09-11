@@ -11,7 +11,17 @@ class App extends Component {
     contacts: [],
     filter: "",
   };
-
+  componentDidMount() {
+    const contacts = JSON.parse(localStorage.getItem("contacts"));
+    if (contacts) {
+      this.setState({ contacts: contacts });
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+    }
+  }
   formSubmitHandler = (data) => {
     this.setState(({ contacts }) => ({
       contacts: [...contacts, { id: uuidv4(), ...data }],
@@ -29,17 +39,7 @@ class App extends Component {
       filter: e.target.value,
     });
   };
-  componentDidMount() {
-    const contacts = JSON.parse(localStorage.getItem("contacts"));
-    if (contacts) {
-      this.setState({ contacts: contacts });
-    }
-  }
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.contacts !== prevState.contacts) {
-      localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-    }
-  }
+
   render() {
     const { contacts, filter } = this.state;
     const lowerFilter = this.state.filter.toLowerCase();
